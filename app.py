@@ -1,14 +1,22 @@
+import os
+from os.path import join, dirname
+from dotenv import load_dotenv
 from flask import Flask, render_template, request, jsonify, redirect, url_for
 from pymongo import MongoClient
 import requests
 from bson import ObjectId
 
+dotenv_path = join(dirname(__file__), '.env')
+load_dotenv(dotenv_path)
+
+
+MONGODB_URI = os.environ.get("MONGODB_URI")
+DB_NAME =  os.environ.get("DB_NAME")
+
+client = MongoClient(MONGODB_URI)
+db = client[DB_NAME]
+
 app = Flask(__name__)
-
-client = MongoClient('mongodb+srv://yasmin:yasmin@cluster0.uxms5uf.mongodb.net/?retryWrites=true&w=majority')
-db = client.dblearningx_tom
-
-
 @app.route('/')
 def main():
     words_result = db.words.find({}, {'_id': False})
