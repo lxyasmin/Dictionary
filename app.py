@@ -19,15 +19,21 @@ db = client[DB_NAME]
 app = Flask(__name__)
 @app.route('/')
 def main():
+    #Untuk mencari semua data dari database
     words_result = db.words.find({}, {'_id': False})
     words = []
     for word in words_result:
+        #ambil indeks pertama lalu ambil yang shorfdef
         definition = word['definitions'][0]['shortdef']
+        #Memastikan kalau semua data itu string tunggal
+        # Kalau udah str gak perlu diubah lagi 
         definition = definition if type(definition) is str else definition[0]
+        #Disini akan menambahkan word ke def words
         words.append({
             'word': word['word'],
             'definition': definition,
         })
+        #Baru disini kita akan kasih akses 
     msg = request.args.get('msg')
     return render_template(
         'index.html',
